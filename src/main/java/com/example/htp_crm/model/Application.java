@@ -18,8 +18,10 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Enumerated
     private ApplicationStatus applicationStatus;
 
+    @Enumerated
     private ApplicationType applicationType;
 
     private String companyNameEng;
@@ -84,33 +86,47 @@ public class Application {
 
 
     //    FILES
-    @OneToOne
-    @JoinColumn(name = "articles_of_accociation_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "articles_of_accociation_id", referencedColumnName = "id")
     private UploadedFile articlesOfAccociation;//Articles of Association(УСТАВ)
 
-    @OneToOne
-    @JoinColumn(name = "passport_founders_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passport_founders_id", referencedColumnName = "id")
     private UploadedFile passportFounders;//Articles of Association(ПАСПОРТА УЧРЕДИТЕЛЕЙ)
 
-    @OneToOne
-    @JoinColumn(name = "passport_ceo_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passport_ceo_id", referencedColumnName = "id")
     private UploadedFile passportCEO;//Articles of Association(ПАСПОРТ РУКОВОДИТЕЛЯ)
 
-    @OneToOne
-    @JoinColumn(name = "decision_appointing_ceo_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "decision_appointing_ceo_id", referencedColumnName = "id")
     private UploadedFile decisionAppointingCeo;//Articles of Association(РЕШЕНИЕ О НАЗНАЧЕНИИ РУКОВОДИТЕЛЯ)
 
-    @OneToOne
-    @JoinColumn(name = "balance_sheet_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "balance_sheet_id", referencedColumnName = "id")
     private UploadedFile balanceSheet;//Balance Sheet / Certificate of No Debts(БУХГАЛТЕРСКИЙ БАЛАНС)
 
-    @OneToOne
-    @JoinColumn(name = "pdf_report_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pdf_report_id", referencedColumnName = "id")
     private UploadedFile pdfReport;//Balance Sheet / Certificate of No Debts(БУХГАЛТЕРСКИЙ БАЛАНС)
 
 
     //    FOUNDERS
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
     private Set<Founder> founders = new HashSet<>();
+
+    //    Examination
+    private int approvalCount;
+    private int deniedCount;
+    private int postonedCount;
+
+    @OneToMany(mappedBy = "application")
+    private Set<User> approved = new HashSet<>();
+
+    @OneToMany(mappedBy = "application")
+    private Set<User> denied = new HashSet<>();
+
+    @OneToMany(mappedBy = "application")
+    private Set<User> postponed = new HashSet<>();
 
 }

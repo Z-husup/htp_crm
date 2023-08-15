@@ -1,33 +1,31 @@
 package com.example.htp_crm.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.htp_crm.model.enums.UserType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.usertype.UserType;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "user")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Enumerated
     private UserType userType;
 
     private String username;
 
     private String password;
 
-    private String firstname;
-
-    private String familyname;
-
     private String fullname;
 
+    @ManyToOne
+    @JoinColumn(name = "application_id")
+    private Application application;
 
 }

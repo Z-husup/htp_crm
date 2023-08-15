@@ -3,11 +3,6 @@ package com.example.htp_crm.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-
 
 @Getter
 @Setter
@@ -15,7 +10,7 @@ import java.io.IOException;
 public class UploadedFile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String fileName;
