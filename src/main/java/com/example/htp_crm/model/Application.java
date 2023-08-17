@@ -3,11 +3,12 @@ package com.example.htp_crm.model;
 import com.example.htp_crm.model.enums.ApplicationStatus;
 import com.example.htp_crm.model.enums.ApplicationType;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.Hibernate;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -116,17 +117,7 @@ public class Application {
     private Set<Founder> founders = new HashSet<>();
 
     //    Examination
-    private int approvalCount;
-    private int deniedCount;
-    private int postonedCount;
-
-    @OneToMany(mappedBy = "application")
-    private Set<User> approved = new HashSet<>();
-
-    @OneToMany(mappedBy = "application")
-    private Set<User> denied = new HashSet<>();
-
-    @OneToMany(mappedBy = "application")
-    private Set<User> postponed = new HashSet<>();
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+    private Set<UserApplicationVote> votes = new HashSet<>();
 
 }

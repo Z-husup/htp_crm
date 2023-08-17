@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -23,12 +22,12 @@ public class AdminController {
     @Autowired
     private UploadedFileRepository uploadedFileRepository;
 
-    @GetMapping("/applications")
+    @GetMapping
     public ResponseEntity<String> getAllApplications() {
 
         applicationService.getAllApplications();
 
-        return ResponseEntity.ok("Task received successfully!");
+        return ResponseEntity.ok("Applications!");
     }
 
     @GetMapping("/applications/status")
@@ -36,11 +35,11 @@ public class AdminController {
 
         applicationService.getApplicationsByStatus(applicationStatus);
 
-        return ResponseEntity.ok("Task received successfully!");
+        return ResponseEntity.ok("Applications by Status!");
     }
 
-    @GetMapping("/examination")
-    public ResponseEntity<Application> getApplication(@RequestParam Long applicationId) {
+    @GetMapping("/examination/{id}")
+    public ResponseEntity<Application> getApplication(@PathVariable Long applicationId) {
 
         Application application = applicationService.getApplicationById(applicationId);
 

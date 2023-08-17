@@ -3,10 +3,13 @@ package com.example.htp_crm.service;
 import com.example.htp_crm.dto.ApplicationDto;
 import com.example.htp_crm.model.Application;
 import com.example.htp_crm.model.User;
+import com.example.htp_crm.model.UserApplicationVote;
 import com.example.htp_crm.model.enums.ApplicationStatus;
 import com.example.htp_crm.model.enums.ApplicationType;
+import com.example.htp_crm.model.enums.Vote;
 import com.example.htp_crm.repository.ApplicationRepository;
 import com.example.htp_crm.service.interfaces.ApplicationServiceInterface;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -141,34 +144,49 @@ public class ApplicationService implements ApplicationServiceInterface {
     }
 
     @Override
+    @Transactional
     public void approveApplication(Application application, User expert) {
-        application.getApproved().add(expert);
-        application.setApprovalCount(application.getApprovalCount() + 1);
-        if (application.getApprovalCount() >= 3) {
-            application.setApplicationStatus(ApplicationStatus.APPROVED);
-        }
-        // Update database
-        applicationRepository.save(application);
+        addVote(application, expert, Vote.APPROVE);
     }
 
     @Override
+    @Transactional
     public void denyApplication(Application application, User expert) {
-        application.getDenied().add(expert);
-        application.setDeniedCount(application.getDeniedCount() + 1);
-        if (application.getDeniedCount() >= 3) {
+        addVote(application, expert, Vote.DENY);
+    }
+
+    @Override
+    @Transactional
+    public void postponeApplication(Application application, User expert) {
+        addVote(application, expert, Vote.POSTPONE);
+    }
+
+    @Override
+    public void addVote(Application application, User user, Vote vote) {
+        UserApplicationVote userApplicationVote = new UserApplicationVote();
+        userApplicationVote.setUser(user);
+        userApplicationVote.setApplication(application);
+        userApplicationVote.setVote(vote);
+
+        application.getVotes().add(userApplicationVote);
+
+        // Update approval and denial counts based on the added vote
+        int approvedCount = 0;
+        int deniedCount = 0;
+        for (UserApplicationVote vote2 : application.getVotes()) {
+            if (vote2.getVote() == Vote.APPROVE) {
+                approvedCount++;
+            } else if (vote2.getVote() == Vote.DENY) {
+                deniedCount++;
+            }
+        }
+
+        if (approvedCount >= 3) {
+            application.setApplicationStatus(ApplicationStatus.APPROVED);
+        } else if (deniedCount >= 3) {
             application.setApplicationStatus(ApplicationStatus.DENIED);
         }
-        // Update database
-        applicationRepository.save(application);
-    }
 
-    @Override
-    public void postponeApplication(Application application, User expert) {
-        application.getPostponed().add(expert);
-        application.setPostonedCount(application.getPostonedCount() + 1);
-        if (application.getPostonedCount() >= 3) {
-            application.setApplicationStatus(ApplicationStatus.POSTPONED);
-        }
         // Update database
         applicationRepository.save(application);
     }

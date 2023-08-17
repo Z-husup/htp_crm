@@ -22,7 +22,7 @@ public class ExpertController {
     @Autowired
     private UploadedFileRepository uploadedFileRepository;
 
-    @GetMapping("/applications")
+    @GetMapping
     public ResponseEntity<String> getAllApplications() {
 
         applicationService.getAllApplications();
