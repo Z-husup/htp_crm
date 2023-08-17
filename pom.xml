@@ -95,6 +95,13 @@
             <artifactId>poi-scratchpad</artifactId>
             <version>5.2.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.0-RC1</version>
+        </dependency>
+
 
         <!-- Project Lombok -->
         <dependency>

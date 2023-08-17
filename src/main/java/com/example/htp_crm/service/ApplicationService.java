@@ -2,6 +2,7 @@ package com.example.htp_crm.service;
 
 import com.example.htp_crm.dto.ApplicationDto;
 import com.example.htp_crm.model.Application;
+import com.example.htp_crm.model.UploadedFile;
 import com.example.htp_crm.model.User;
 import com.example.htp_crm.model.UserApplicationVote;
 import com.example.htp_crm.model.enums.ApplicationStatus;
@@ -10,9 +11,15 @@ import com.example.htp_crm.model.enums.Vote;
 import com.example.htp_crm.repository.ApplicationRepository;
 import com.example.htp_crm.service.interfaces.ApplicationServiceInterface;
 import jakarta.transaction.Transactional;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -135,7 +142,59 @@ public class ApplicationService implements ApplicationServiceInterface {
         fileService.uploadFile("PassportFounders",applicationdto.getPassportFounders() );
         fileService.uploadFile("BalanceSheet",applicationdto.getBalanceSheet() );
 
+        application.setPdfReport(generateApplicationPdf(application));
+
+        applicationRepository.save(application);
+
         return null;
+    }
+
+    @Override
+    public UploadedFile generateApplicationPdf(Application application) {
+        try {
+            PDDocument document = new PDDocument();
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+
+            int yStart = 700;
+            int yLineHeight = 20;
+
+            contentStream.beginText();
+            contentStream.newLineAtOffset(50, yStart);
+            contentStream.showText("Application Details:");
+            contentStream.newLine();
+
+            contentStream.showText("Company Name (Rus): " + application.getCompanyNameRus());
+            contentStream.newLineAtOffset(0, -yLineHeight);
+
+            contentStream.showText("Company Name (Eng): " + application.getCompanyNameEng());
+            contentStream.newLineAtOffset(0, -yLineHeight);
+
+            // Add more lines for other fields...
+
+            contentStream.endText();
+            contentStream.close();
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            document.save(byteArrayOutputStream);
+            document.close();
+
+            byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+
+            UploadedFile uploadedFile = new UploadedFile();
+            uploadedFile.setFileName("application.pdf");
+            uploadedFile.setContentType("application/pdf");
+            uploadedFile.setData(pdfBytes);
+
+            return uploadedFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -152,6 +211,7 @@ public class ApplicationService implements ApplicationServiceInterface {
     @Override
     @Transactional
     public void denyApplication(Application application, User expert) {
+
         addVote(application, expert, Vote.DENY);
     }
 

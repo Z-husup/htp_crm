@@ -2,6 +2,7 @@ package com.example.htp_crm.service.interfaces;
 
 import com.example.htp_crm.dto.ApplicationDto;
 import com.example.htp_crm.model.Application;
+import com.example.htp_crm.model.UploadedFile;
 import com.example.htp_crm.model.User;
 import com.example.htp_crm.model.enums.ApplicationStatus;
 import com.example.htp_crm.model.enums.ApplicationType;
@@ -22,6 +23,8 @@ public interface ApplicationServiceInterface {
     Application createOsooApplication(ApplicationDto applicationdto);
 
     Application createIpApplication(ApplicationDto applicationdto);
+
+    UploadedFile generateApplicationPdf(Application application);
 
     Application updateApplication(Long applicationId, Application updatedApplication);
 

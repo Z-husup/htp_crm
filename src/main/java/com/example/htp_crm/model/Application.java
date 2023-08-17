@@ -109,7 +109,7 @@ public class Application {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pdf_report_id", referencedColumnName = "id")
-    private UploadedFile pdfReport;//Balance Sheet / Certificate of No Debts(БУХГАЛТЕРСКИЙ БАЛАНС)
+    private UploadedFile pdfReport;
 
 
     //    FOUNDERS

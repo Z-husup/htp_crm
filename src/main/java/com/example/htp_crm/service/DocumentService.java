@@ -73,8 +73,6 @@ public class DocumentService implements DocumentServiceInterface {
             String formattedDate = dateFormatter.format(new Date());
             data.put("date", formattedDate);
 
-            // Other fields...
-
             // Replace placeholders with data
             TemplateProcessor.fillTemplate(templateDoc, data);
 
@@ -111,8 +109,6 @@ public class DocumentService implements DocumentServiceInterface {
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMMM yyyy");
             String formattedDate = dateFormatter.format(new Date());
             data.put("date", formattedDate);
-
-            // Other fields...
 
             // Replace placeholders with data
             TemplateProcessor.fillTemplate(templateDoc, data);
