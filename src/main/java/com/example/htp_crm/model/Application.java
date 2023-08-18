@@ -2,9 +2,12 @@ package com.example.htp_crm.model;
 
 import com.example.htp_crm.model.enums.ApplicationStatus;
 import com.example.htp_crm.model.enums.ApplicationType;
+import com.example.htp_crm.util.MultipartFileAdapter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -13,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@ToString
 public class Application {
 
     @Id
@@ -119,5 +123,37 @@ public class Application {
     //    Examination
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
     private Set<UserApplicationVote> votes = new HashSet<>();
+
+
+    public MultipartFile getArticlesOfAccociationMultipartFile() {
+        return uploadedFileToMultipartFile(articlesOfAccociation);
+    }
+
+    public MultipartFile getPassportFoundersMultipartFile() {
+        return uploadedFileToMultipartFile(passportFounders);
+    }
+
+    public MultipartFile getPassportCEOMultipartFile() {
+        return uploadedFileToMultipartFile(passportCEO);
+    }
+
+    public MultipartFile getDecisionAppointingCeoMultipartFile() {
+        return uploadedFileToMultipartFile(decisionAppointingCeo);
+    }
+
+    public MultipartFile getBalanceSheetMultipartFile() {
+        return uploadedFileToMultipartFile(balanceSheet);
+    }
+
+    public MultipartFile getPdfReportMultipartFile() {
+        return uploadedFileToMultipartFile(pdfReport);
+    }
+
+    private MultipartFile uploadedFileToMultipartFile(UploadedFile uploadedFile) {
+        if (uploadedFile != null && uploadedFile.getData() != null) {
+            return new MultipartFileAdapter(uploadedFile);
+        }
+        return null;
+    }
 
 }
