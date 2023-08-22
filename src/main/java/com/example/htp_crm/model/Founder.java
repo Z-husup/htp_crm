@@ -1,5 +1,6 @@
 package com.example.htp_crm.model;
 
+import com.example.htp_crm.dto.FounderDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,5 +25,15 @@ public class Founder {
     @ManyToOne
     @JoinColumn(name = "application_id")
     private Application application;
+
+    public FounderDto toFounderDto() {
+        FounderDto founderDto = new FounderDto();
+        founderDto.setFounderFullName(this.founderFullName);
+        founderDto.setFounderNumber(this.founderNumber);
+        founderDto.setFounderCitizenship(this.founderCitizenship);
+        founderDto.setPercentage(this.percentage);
+        return founderDto;
+    }
+
 
 }

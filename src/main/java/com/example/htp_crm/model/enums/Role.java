@@ -1,6 +1,6 @@
 package com.example.htp_crm.model.enums;
 
-public enum UserType {
+public enum Role {
     EXPERT,
     ADMIN
 }

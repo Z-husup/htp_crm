@@ -1,13 +1,11 @@
 package com.example.htp_crm.dto;
 
-import com.example.htp_crm.model.Founder;
 import com.example.htp_crm.model.UploadedFile;
-import com.example.htp_crm.model.enums.ApplicationStatus;
-import com.example.htp_crm.model.enums.ApplicationType;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -94,5 +92,40 @@ public class ApplicationDto {
 
 
     //    FOUNDERS
-    private Set<Founder> founders = new HashSet<>();
+    private Set<FounderDto> founders = new HashSet<>();
+
+    public UploadedFile getArticlesOfAccociationUploadedFile() {
+        return multipartFileToUploadedFile(articlesOfAccociation);
+    }
+
+    public UploadedFile getPassportFoundersUploadedFile() {
+        return multipartFileToUploadedFile(passportFounders);
+    }
+
+    public UploadedFile getPassportCEOUploadedFile() {
+        return multipartFileToUploadedFile(passportCEO);
+    }
+
+    public UploadedFile getDecisionAppointingCeoUploadedFile() {
+        return multipartFileToUploadedFile(decisionAppointingCeo);
+    }
+
+    public UploadedFile getBalanceSheetUploadedFile() {
+        return multipartFileToUploadedFile(balanceSheet);
+    }
+
+    private UploadedFile multipartFileToUploadedFile(MultipartFile multipartFile) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            UploadedFile uploadedFile = new UploadedFile();
+            uploadedFile.setFileName(multipartFile.getOriginalFilename());
+            uploadedFile.setContentType(multipartFile.getContentType());
+            try {
+                uploadedFile.setData(multipartFile.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return uploadedFile;
+        }
+        return null;
+    }
 }

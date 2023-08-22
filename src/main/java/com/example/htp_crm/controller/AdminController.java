@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -23,11 +24,9 @@ public class AdminController {
     private UploadedFileRepository uploadedFileRepository;
 
     @GetMapping
-    public ResponseEntity<String> getAllApplications() {
+    public ResponseEntity<List<Application>> getAllApplications() {
 
-        applicationService.getAllApplications();
-
-        return ResponseEntity.ok("Applications!");
+        return ResponseEntity.ok(applicationService.getAllApplications());
     }
 
     @GetMapping("/applications/status")
@@ -36,6 +35,12 @@ public class AdminController {
         applicationService.getApplicationsByStatus(applicationStatus);
 
         return ResponseEntity.ok("Applications by Status!");
+    }
+
+    @GetMapping("/applications/{id}")
+    public ResponseEntity<Application> getApplicationsById(@RequestParam Long id) {
+        applicationService.getApplicationById(id);
+        return ResponseEntity.ok(applicationService.getApplicationById(id));
     }
 
     @GetMapping("/examination/{id}")

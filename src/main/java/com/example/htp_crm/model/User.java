@@ -1,6 +1,6 @@
 package com.example.htp_crm.model;
 
-import com.example.htp_crm.model.enums.UserType;
+import com.example.htp_crm.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserType userType;
+    private Role role;
 
     private String username;
 
